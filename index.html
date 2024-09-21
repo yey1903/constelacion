@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Constelación de Amor para Justine</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Dancing Script', cursive;
+            background: linear-gradient(135deg, #1c1c6b, #0d81d9);
+            background-size: 400% 400%;
+            animation: gradientChange 20s ease infinite;
+            color: #ffffff;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            text-align: center;
+            opacity: 0;
+            animation: fadeIn 4s ease forwards;
+            position: relative;
+        }
+
+        @keyframes gradientChange {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        h1 {
+            font-size: 3em;
+            color: #ffd700;
+            margin-bottom: 20px;
+            animation: heartbeat 2s infinite ease-in-out;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.6);
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .sky {
+            position: relative;
+            width: 100%;
+            height: 70vh;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: radial-gradient(circle, #ffffff, #ffd700);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8), 0 0 30px rgba(255, 255, 255, 0.6);
+            z-index: 2;
+            animation: twinkle 3s infinite ease-in-out alternate;
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+        }
+
+        .star:hover {
+            transform: scale(1.5);
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.9), 0 0 60px rgba(255, 255, 255, 0.7);
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0.5; transform: scale(1.4); }
+        }
+
+        .poem {
+            font-size: 1.7em;
+            color: #ffd700;
+            margin-top: 20px;
+            opacity: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            transition: opacity 1.5s ease, transform 1s ease;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 1em;
+            color: #f0e68c;
+            z-index: 10;
+        }
+
+        .shooting-star {
+            position: absolute;
+            background-color: white;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            box-shadow: 0 0 10px white, 0 0 20px white;
+            animation: shoot 5s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        @keyframes shoot {
+            0% { opacity: 0; transform: translate(0, 0); }
+            10% { opacity: 1; }
+            90% { opacity: 1; transform: translate(-300px, 150px); }
+            100% { opacity: 0; }
+        }
+
+        /* Corazón que flota al hacer clic */
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            transform: rotate(-45deg);
+            animation: floatUp 3s ease-out forwards;
+        }
+
+        .heart::before, .heart::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            border-radius: 50%;
+        }
+
+        .heart::before {
+            top: -10px;
+            left: 0;
+        }
+
+        .heart::after {
+            left: 10px;
+            top: 0;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-150px); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <h1>Constelación de Amor</h1>
+    <div class="sky" id="sky">
+        <div class="star" style="top: 30%; left: 20%;" onclick="showMessage(0); createHeart(event); createShootingStar()"></div>
+        <div class="star" style="top: 50%; left: 40%;" onclick="showMessage(1); createHeart(event); createShootingStar()"></div>
+        <div class="star" style="top: 20%; left: 60%;" onclick="showMessage(2); createHeart(event); createShootingStar()"></div>
+        <div class="star" style="top: 70%; left: 80%;" onclick="showMessage(3); createHeart(event); createShootingStar()"></div>
+        <canvas id="constellationCanvas"></canvas>
+    </div>
+
+    <div class="poem"></div>
+    <div class="footer">
+        <p>Con todo mi amor, <strong>Jeff</strong></p>
+    </div>
+
+    <script>
+        const messages = [
+            "Eres mi luz en la oscuridad, la estrella que guía mi camino.",
+            "Cada día contigo es un nuevo universo de posibilidades.",
+            "Tu sonrisa ilumina mi vida más que mil estrellas en el cielo.",
+            "El amor que siento por ti es más grande que el cielo lleno de estrellas."
+        ];
+
+        function showMessage(index) {
+            const poem = document.querySelector('.poem');
+            poem.textContent = messages[index];
+            poem.style.opacity = 1;
+            poem.style.transform = 'translateY(0)';
+            setTimeout(() => {
+                poem.style.opacity = 0;
+                poem.style.transform = 'translateY(20px)';
+            }, 4000);
+        }
+
+        // Crear corazones animados
+        function createHeart(event) {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.style.left = `${event.clientX}px`;
+            heart.style.top = `${event.clientY}px`;
+            document.body.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 3000);
+        }
+
+        // Crear estrella fugaz
+        function createShootingStar() {
+            const shootingStar = document.createElement('div');
+            shootingStar.classList.add('shooting-star');
+            shootingStar.style.left = `${Math.random() * window.innerWidth}px`;
+            shootingStar.style.top = `${Math.random() * window.innerHeight}px`;
+            document.body.appendChild(shootingStar);
+
+            setTimeout(() => {
+                shootingStar.remove();
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
